@@ -1,0 +1,25 @@
+dbt_project:
+  target: staging
+  outputs:
+    staging:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', '') }}"
+
+      user: "{{ env_var('SNOWFLAKE_USER', '') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD', '') }}"
+
+      role: "{{ env_var('SNOWFLAKE_ROLE', '') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', '') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', '') }}"
+      schema: 'dbt_schema'
+      threads: 1
+      client_session_keep_alive: False
+
+    test:
+      type: postgres
+      user: "{{ env_var('POSTGRES_USER', '') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', '') }}"
+      database: "{{ env_var('DBT_DATABASE', '') }}"
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('POSTGRES_PORT', '5432') | as_number }}"
+      schema: "{{ env_var('POSTGRES_SCHEMA', 'test_dbt') }}"

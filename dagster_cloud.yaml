@@ -1,0 +1,4 @@
+locations:
+  - location_name: purina_usage
+    code_source:
+      package_name: purina_usage
