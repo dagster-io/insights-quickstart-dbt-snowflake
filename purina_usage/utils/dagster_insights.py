@@ -44,7 +44,7 @@ fragment UnauthorizedErrorFragment on UnauthorizedError {
 """
 
 
-def get_snowflake_usage(query_id, database):
+def get_snowflake_usage(context, query_id, database):
     con = snowflake.connector.connect(
         user=os.getenv("DAGSTER_INSIGHTS_SNOWFLAKE_USER"),
         password=os.getenv("DAGSTER_INSIGHTS_SNOWFLAKE_PASSWORD"),
@@ -73,7 +73,6 @@ AND QUERY_ID = '{query_id}'
 """
 
     while True:
-
         # Execute the query
         cur.execute(query)
 
@@ -81,6 +80,7 @@ AND QUERY_ID = '{query_id}'
         rows = cur.fetchall()
         if len(rows) > 0:
             break
+        context.log.info("waiting for snowflake usage data")
         time.sleep(30)
     return rows
 
@@ -121,7 +121,7 @@ def store_dbt_adapter_metrics(
             if adapter_response_key == "query_id" and "database" in node:
                 context.log.info(
                     get_snowflake_usage(
-                        result["adapter_response"][adapter_response_key], node["database"]
+                        context, result["adapter_response"][adapter_response_key], node["database"]
                     )
                 )
             context.log.info(
@@ -149,6 +149,7 @@ def store_dbt_adapter_metrics(
         "assetMetricDefinitions": assetMetricDefinitions,
     }
 
+    context.log.info(metric_graphql_input)
     variables = {"metrics": metric_graphql_input}
     response = requests.post(
         URL,
