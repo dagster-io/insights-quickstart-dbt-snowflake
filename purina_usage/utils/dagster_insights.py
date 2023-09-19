@@ -6,7 +6,8 @@ import snowflake.connector
 
 from dagster import OpExecutionContext
 
-URL = "http://127.0.0.1:3000/test/staging/graphql/"
+URL = "https://dagster-insights.dogfood.dagster.cloud/prod/graphql/"
+CLOUD_TOKEN = os.getenv("DAGSTER_CLOUD_API_TOKEN")
 
 PUT_CLOUD_METRICS_MUTATION = """
 mutation CreateOrUpdateExtenalMetrics(
@@ -150,7 +151,10 @@ def store_dbt_adapter_metrics(
 
     variables = {"metrics": metric_graphql_input}
     response = requests.post(
-        URL, json={"query": PUT_CLOUD_METRICS_MUTATION, "variables": variables}, timeout=300
+        URL,
+        json={"query": PUT_CLOUD_METRICS_MUTATION, "variables": variables},
+        timeout=300,
+        headers={"Dagster-Cloud-Api-Token": CLOUD_TOKEN},
     )
     response.raise_for_status()
     json = response.json()
