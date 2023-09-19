@@ -206,7 +206,7 @@ def put_context_metrics(
             ),
             "assetMetricDefinitions": [
                 {
-                    "assetKey": selected_asset_key.to_string(),
+                    "assetKey": selected_asset_key.to_python_identifier(),
                     "assetGroup": context.assets_def.group_names_by_key.get(selected_asset_key, ""),
                     "metricValues": [
                         {
