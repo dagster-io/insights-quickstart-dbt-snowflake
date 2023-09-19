@@ -198,14 +198,14 @@ def put_context_metrics(
 
     if context.has_assets_def:
         metric_graphql_input = {
+            "runId": context.run_id,
+            "stepKey": context.get_step_execution_context().step.key,
+            "codeLocationName": context.dagster_run.external_job_origin.location_name,
+            "repositoryName": (
+                context.dagster_run.external_job_origin.external_repository_origin.repository_name
+            ),
             "assetMetricDefinitions": [
                 {
-                    "runId": context.run_id,
-                    "stepKey": context.get_step_execution_context().step.key,
-                    "codeLocationName": context.dagster_run.external_job_origin.location_name,
-                    "repositoryName": (
-                        context.dagster_run.external_job_origin.external_repository_origin.repository_name
-                    ),
                     "assetKey": selected_asset_key.to_string(),
                     "assetGroup": context.assets_def.group_names_by_key.get(selected_asset_key, ""),
                     "metricValues": [
@@ -217,18 +217,18 @@ def put_context_metrics(
                     ],
                 }
                 for selected_asset_key in context.selected_asset_keys
-            ]
+            ],
         }
     else:
         metric_graphql_input = {
+            "runId": context.run_id,
+            "stepKey": context.get_step_execution_context().step.key,
+            "codeLocationName": context.dagster_run.external_job_origin.location_name,
+            "repositoryName": (
+                context.dagster_run.external_job_origin.external_repository_origin.repository_name
+            ),
             "jobMetricDefinitions": [
                 {
-                    "runId": context.run_id,
-                    "stepKey": context.get_step_execution_context().step.key,
-                    "codeLocationName": context.dagster_run.external_job_origin.location_name,
-                    "repositoryName": (
-                        context.dagster_run.external_job_origin.external_repository_origin.repository_name
-                    ),
                     "metricValues": [
                         {
                             "metricValue": metric_def.metric_value,
@@ -237,7 +237,7 @@ def put_context_metrics(
                         for metric_def in metrics
                     ],
                 }
-            ]
+            ],
         }
 
     context.log.info(metric_graphql_input)
