@@ -146,7 +146,7 @@ def store_dbt_adapter_metrics(
                 snowflake_metrics = get_snowflake_usage(
                     context, result["adapter_response"][adapter_response_key], node["database"]
                 )
-                metric_values.append(*snowflake_metrics)
+                metric_values.extend(snowflake_metrics)
         assetMetricDefinitions.append(
             {
                 "assetKey": node["name"],
