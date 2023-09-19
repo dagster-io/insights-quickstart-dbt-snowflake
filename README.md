@@ -4,9 +4,9 @@ This project contains testing Dagster pipelines for cost and usage data attribut
 
 ## snowflake role
 
+in order to fetch snowflake specific metric data you will need to create a service role that can access your snowflake account's query history table:
+
 ```sql
-
-
 -- Run as ACCOUNTADMIN
 USE ROLE ACCOUNTADMIN;
 
