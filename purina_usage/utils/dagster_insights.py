@@ -97,7 +97,16 @@ AND QUERY_ID = '{query_id}'
             break
         context.log.info("waiting for snowflake usage data")
         time.sleep(30)
-    return rows
+    return [
+        {
+            "metricValue": rows[0][6],
+            "metricName": "snowflake_credits",
+        },
+        {
+            "metricValue": rows[0][2],
+            "metricName": "bytes_processed",
+        },
+    ]
 
 
 def store_dbt_adapter_metrics(
@@ -134,23 +143,14 @@ def store_dbt_adapter_metrics(
                 continue
             # yield (adapter_response_key, result['adapter_response'][adapter_response_key])
             if adapter_response_key == "query_id" and "database" in node:
-                context.log.info(
-                    get_snowflake_usage(
-                        context, result["adapter_response"][adapter_response_key], node["database"]
-                    )
+                snowflake_metrics = get_snowflake_usage(
+                    context, result["adapter_response"][adapter_response_key], node["database"]
                 )
-            context.log.info(
-                f"metric: {node['name']}.{adapter_response_key}: {result['adapter_response'][adapter_response_key]}"
-            )
-            metric_values.append(
-                {
-                    "metricValue": result["adapter_response"][adapter_response_key],
-                    "metricName": adapter_response_key,
-                }
-            )
+                metric_values.append(*snowflake_metrics)
         assetMetricDefinitions.append(
             {
                 "assetKey": node["name"],
+                "assetGroup": "",
                 "metricValues": metric_values,
             }
         )
@@ -207,9 +207,7 @@ def put_context_metrics(
                         context.dagster_run.external_job_origin.external_repository_origin.repository_name
                     ),
                     "assetKey": selected_asset_key,
-                    "assetGroup": context.assets_def.group_names_by_key.get(
-                        selected_asset_key, None
-                    ),
+                    "assetGroup": context.assets_def.group_names_by_key.get(selected_asset_key, ""),
                     "metricValues": [
                         {
                             "metricValue": metric_def.metric_value,

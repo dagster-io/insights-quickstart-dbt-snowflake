@@ -34,20 +34,18 @@ raw_data_assets = load_assets_from_package_module(
     raw_data,
     group_name="raw_data",
     # all of these assets live in the snowflake database, under the schema raw_data
-    key_prefix=["snowflake", "raw_data"],
+    key_prefix=["raw_data"],
 )
 
 usage_assets = load_assets_from_package_module(
     usage,
-    group_name="snowflake_usage",
+    group_name="snowflake_insights",
     # all of these assets live in the snowflake database, under the schema usage_data
-    key_prefix=["snowflake", "usage_data"],
+    key_prefix=["snowflake", "insights_data"],
 )
 
 # define jobs as selections over the larger graph
-raw_job = define_asset_job(
-    "raw_job", selection=["snowflake/raw_data/users", "snowflake/raw_data/orders"]
-)
+raw_job = define_asset_job("raw_job", selection=["raw_data/users", "raw_data/orders"])
 
 resources = {
     # this io_manager allows us to load dbt models as pandas dataframes
