@@ -206,7 +206,7 @@ def put_context_metrics(
                     "repositoryName": (
                         context.dagster_run.external_job_origin.external_repository_origin.repository_name
                     ),
-                    "assetKey": selected_asset_key,
+                    "assetKey": selected_asset_key.to_string(),
                     "assetGroup": context.assets_def.group_names_by_key.get(selected_asset_key, ""),
                     "metricValues": [
                         {
