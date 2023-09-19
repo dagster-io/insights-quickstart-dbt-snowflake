@@ -3,11 +3,26 @@ import requests
 import time
 import snowflake.connector
 
+from typing import List, NamedTuple
 
 from dagster import OpExecutionContext
+import dagster._check as check
 
 URL = "https://dagster-insights.dogfood.dagster.cloud/prod/graphql/"
 CLOUD_TOKEN = os.getenv("DAGSTER_CLOUD_API_TOKEN")
+
+
+class Metric(NamedTuple):
+    """This class gives information about a Metric.
+
+    Args:
+        metric_name (str): name of the metric
+        metric_value (float): value of the metric
+    """
+
+    metric_name: str
+    metric_value: float
+
 
 PUT_CLOUD_METRICS_MUTATION = """
 mutation CreateOrUpdateExtenalMetrics(
@@ -160,3 +175,79 @@ def store_dbt_adapter_metrics(
     response.raise_for_status()
     json = response.json()
     return json
+
+
+def put_context_metrics(
+    context: OpExecutionContext,
+    metrics: List[Metric],
+):
+    """Store metrics in the dagster cloud metrics store. This method is useful when you would like to
+    store run, asset or asset group materialization metric data to view in the insights UI.
+
+    Currently only supported in Dagster Cloud
+
+    Args:
+        metrics (Mapping[str, Any]): metrics to store in the dagster metrics store
+    """
+    check.list_param(metrics, "metrics", of_type=Metric)
+    check.inst_param(context, "context", OpExecutionContext)
+    metric_graphql_input = {}
+
+    if context.dagster_run.external_job_origin is None:
+        raise Exception("dagster run for this context has not started yet")
+
+    if context.has_assets_def:
+        metric_graphql_input = {
+            "assetMetricDefinitions": [
+                {
+                    "runId": context.run_id,
+                    "stepKey": context.get_step_execution_context().step.key,
+                    "codeLocationName": context.dagster_run.external_job_origin.location_name,
+                    "repositoryName": (
+                        context.dagster_run.external_job_origin.external_repository_origin.repository_name
+                    ),
+                    "assetKey": selected_asset_key,
+                    "assetGroup": context.assets_def.group_names_by_key.get(
+                        selected_asset_key, None
+                    ),
+                    "metricValues": [
+                        {
+                            "metricValue": metric_def.metric_value,
+                            "metricName": metric_def.metric_name,
+                        }
+                        for metric_def in metrics
+                    ],
+                }
+                for selected_asset_key in context.selected_asset_keys
+            ]
+        }
+    else:
+        metric_graphql_input = {
+            "jobMetricDefinitions": [
+                {
+                    "runId": context.run_id,
+                    "stepKey": context.get_step_execution_context().step.key,
+                    "codeLocationName": context.dagster_run.external_job_origin.location_name,
+                    "repositoryName": (
+                        context.dagster_run.external_job_origin.external_repository_origin.repository_name
+                    ),
+                    "metricValues": [
+                        {
+                            "metricValue": metric_def.metric_value,
+                            "metricName": metric_def.metric_name,
+                        }
+                        for metric_def in metrics
+                    ],
+                }
+            ]
+        }
+
+    context.log.info(metric_graphql_input)
+    variables = {"metrics": metric_graphql_input}
+    response = requests.post(
+        URL,
+        json={"query": PUT_CLOUD_METRICS_MUTATION, "variables": variables},
+        timeout=300,
+        headers={"Dagster-Cloud-Api-Token": CLOUD_TOKEN},
+    )
+    response.raise_for_status()
