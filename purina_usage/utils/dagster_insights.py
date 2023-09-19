@@ -92,12 +92,12 @@ def store_dbt_adapter_metrics(
 ):
     # store the manifest and run results somewhere
     # for now, we'll just print them
-    if (
-        manifest["metadata"]["dbt_schema_version"]
-        != "https://schemas.getdbt.com/dbt/manifest/v9.json"
-    ):
+    if manifest["metadata"]["dbt_schema_version"] not in [
+        "https://schemas.getdbt.com/dbt/manifest/v10.json",
+        "https://schemas.getdbt.com/dbt/manifest/v9.json",
+    ]:
         context.log.warn(
-            f"unexpected dbt schema version: {manifest['metadata']['dbt_schema_version']}, required: https://schemas.getdbt.com/dbt/manifest/v9.json"
+            f"unexpected dbt schema version: {manifest['metadata']['dbt_schema_version']}, required: https://schemas.getdbt.com/dbt/manifest/v10.json"
         )
         return
     if (
