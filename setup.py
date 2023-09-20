@@ -6,6 +6,7 @@ setup(
     install_requires=[
         "dagster",
         "dagster-cloud",
+        "dagster-insights",
         "pandas",
         "snowflake-connector-python[pandas]",
         "snowflake.sqlalchemy",
