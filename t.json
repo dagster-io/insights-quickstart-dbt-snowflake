@@ -1,0 +1,89 @@
+{
+  "runId": "2da9bd96-4c89-435c-a274-360fc3b96aab",
+  "stepKey": "dbt_snowflake_assets",
+  "codeLocationName": "purina_usage",
+  "repositoryName": "__repository__",
+  "assetMetricDefinitions": [
+    {
+      "assetKey": "snowflake__dbt__orders_cleaned",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__users_cleaned",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__orders_augmented",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__company_stats",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__order_stats",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__sku_stats",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__company_perf",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__daily_order_summary",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    },
+    {
+      "assetKey": "snowflake__dbt__top_users",
+      "assetGroup": "snowflake_dbt",
+      "metricValues": [
+        { "metricValue": 10, "metricName": "bytes_scanned" },
+        { "metricValue": 20, "metricName": "bytes_written" },
+        { "metricValue": 0.1, "metricName": "snowflake_credits" }
+      ]
+    }
+  ]
+}

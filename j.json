@@ -1,0 +1,17 @@
+{
+  "metrics": [
+    {
+      "runId": "9fa76ff6-1984-4986-9c90-f885f3320ebb",
+      "stepKey": "users",
+      "codeLocationName": "example_location",
+      "repositoryName": "__repository__",
+      "assetMetricDefinitions": [
+        {
+          "assetKey": "users",
+          "assetGroup": "default",
+          "metricValues": [{ "metricValue": 34, "metricName": "rows_affected" }]
+        }
+      ]
+    }
+  ]
+}
