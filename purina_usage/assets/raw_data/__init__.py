@@ -3,17 +3,15 @@ import pandas as pd
 from dagster import asset
 from typing import Generator, Any
 from dagster import OpExecutionContext, Output
+from dagster_cloud.metrics import put_context_metrics, DagsterInsightsMetric
 
 from purina_usage.utils import random_data
-from dagster_insights import DagsterInsightsResource, DagsterInsightsMetric
 
 
 @asset(compute_kind="random")
-def users(
-    context: OpExecutionContext, dagster_insights: DagsterInsightsResource
-) -> Generator[Output[pd.DataFrame], Any, Any]:
+def users(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, Any]:
     """A table containing all users data."""
-    dagster_insights.put_context_metrics(
+    put_context_metrics(
         context,
         metrics=[
             DagsterInsightsMetric(
@@ -32,7 +30,7 @@ def users(
         }
     )
     yield Output(data)
-    dagster_insights.put_context_metrics(
+    put_context_metrics(
         context,
         metrics=[
             DagsterInsightsMetric(
@@ -44,12 +42,10 @@ def users(
 
 
 @asset(compute_kind="random")
-def orders(
-    context: OpExecutionContext, dagster_insights: DagsterInsightsResource
-) -> Generator[Output[pd.DataFrame], Any, Any]:
+def orders(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, Any]:
     """A table containing all orders that have been placed."""
 
-    dagster_insights.put_context_metrics(
+    put_context_metrics(
         context,
         metrics=[
             DagsterInsightsMetric(
@@ -63,7 +59,7 @@ def orders(
         n=10000,
     )
     yield Output(data)
-    dagster_insights.put_context_metrics(
+    put_context_metrics(
         context,
         metrics=[
             DagsterInsightsMetric(

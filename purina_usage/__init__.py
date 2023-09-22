@@ -1,6 +1,5 @@
 from dagster import (
     Definitions,
-    EnvVar,
     ScheduleDefinition,
     define_asset_job,
     fs_io_manager,
@@ -9,7 +8,6 @@ from dagster import (
 from dagster_snowflake_pandas import snowflake_pandas_io_manager
 
 from purina_usage.assets import raw_data, usage, dbt_snowflake
-from dagster_insights import DagsterInsightsResource
 
 # import os
 # from pathlib import Path
@@ -51,7 +49,6 @@ usage_assets = load_assets_from_package_module(
 raw_job = define_asset_job("raw_job", selection=["raw_data/users", "raw_data/orders"])
 
 from gql.transport.requests import RequestsHTTPTransport
-from dagster_insights import DagsterInsightsResource
 
 transport = RequestsHTTPTransport(
     url="http://localhost:3000/test/staging/graphql",
@@ -76,11 +73,6 @@ resources = {
     "model_io_manager": fs_io_manager,
     # this resource is used to execute dbt cli commands
     "dbt": dbt_snowflake.dbt_cli_resource,
-    "dagster_insights": DagsterInsightsResource(
-        organization_id=EnvVar("DAGSTER_ORGANIZATION_ID"),
-        api_token=EnvVar("DAGSTER_API_TOKEN"),
-        url="http://localhost:3000/test/staging/graphql",
-    ),
 }
 
 
