@@ -9,8 +9,8 @@ dbt_project:
       password: "{{ env_var('SNOWFLAKE_PASSWORD', '') }}"
 
       role: "{{ env_var('SNOWFLAKE_ROLE', '') }}"
-      database: "{{ env_var('SNOWFLAKE_DATABASE', '') }}"
-      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', '') }}"
+      database: 'USAGE_TEST'
+      warehouse: 'DEVELOPMENT'
       schema: 'dbt_schema'
       threads: 1
       client_session_keep_alive: False
