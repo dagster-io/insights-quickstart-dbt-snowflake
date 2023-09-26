@@ -7,7 +7,7 @@ from gql.transport.requests import RequestsHTTPTransport
 
 import snowflake.connector
 from dagster import HourlyPartitionsDefinition, Output, asset
-from dagster_cloud.metrics import DagsterMetric, put_asset_metrics
+from dagster_insights import DagsterMetric, put_asset_metrics
 from dagster_cloud import DagsterCloudAgentInstance
 
 ASSET_OBSERVATIONS_QUERY = """
