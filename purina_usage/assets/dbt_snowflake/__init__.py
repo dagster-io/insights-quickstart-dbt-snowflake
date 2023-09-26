@@ -6,13 +6,6 @@ from dagster_dbt import DbtCliResource, dbt_assets
 from dagster import OpExecutionContext
 from dagster_cloud.metrics import store_dbt_adapter_metrics
 
-# snowflake_connection_details = SnowflakeConnectionDetails(
-#     user=os.getenv("SNOWFLAKE_USER", ""),
-#     password=os.getenv("SNOWFLAKE_PASSWORD", ""),
-#     account="na94824.us-east-1",
-#     warehouse="DEVELOPMENT",
-# )
-
 dbt_project_dir = Path(__file__).joinpath("..", "..", "..", "..", "dbt_project").resolve()
 dbt_cli_resource = DbtCliResource(
     project_dir=os.fspath(dbt_project_dir),

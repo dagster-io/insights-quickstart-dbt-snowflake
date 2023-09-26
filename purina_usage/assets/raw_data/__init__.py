@@ -11,15 +11,6 @@ from purina_usage.utils import random_data
 @asset(compute_kind="random")
 def users(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, Any]:
     """A table containing all users data."""
-    put_context_metrics(
-        context,
-        metrics=[
-            DagsterMetric(
-                metric_name="snowflake_credits",
-                metric_value=122.22,
-            )
-        ],
-    )
     data = pd.DataFrame(
         {
             "user_id": range(1000),
