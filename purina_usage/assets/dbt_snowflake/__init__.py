@@ -4,14 +4,14 @@ from pathlib import Path
 from dagster_dbt import DbtCliResource, dbt_assets
 
 from dagster import OpExecutionContext
-from dagster_cloud.metrics import SnowflakeConnectionDetails, store_dbt_adapter_metrics
+from dagster_cloud.metrics import store_dbt_adapter_metrics
 
-snowflake_connection_details = SnowflakeConnectionDetails(
-    user=os.getenv("SNOWFLAKE_USER", ""),
-    password=os.getenv("SNOWFLAKE_PASSWORD", ""),
-    account="na94824.us-east-1",
-    warehouse="DEVELOPMENT",
-)
+# snowflake_connection_details = SnowflakeConnectionDetails(
+#     user=os.getenv("SNOWFLAKE_USER", ""),
+#     password=os.getenv("SNOWFLAKE_PASSWORD", ""),
+#     account="na94824.us-east-1",
+#     warehouse="DEVELOPMENT",
+# )
 
 dbt_project_dir = Path(__file__).joinpath("..", "..", "..", "..", "dbt_project").resolve()
 dbt_cli_resource = DbtCliResource(
@@ -31,4 +31,4 @@ def nonblocking_dbt_snowflake_assets(context: OpExecutionContext, dbt: DbtCliRes
 
     run_results = dbt_cli_invocation.get_artifact("run_results.json")
     manifest = dbt_cli_invocation.get_artifact("manifest.json")
-    store_dbt_adapter_metrics(context, manifest, run_results, snowflake_connection_details)
+    yield from store_dbt_adapter_metrics(context, manifest, run_results)

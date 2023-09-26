@@ -3,7 +3,7 @@ import pandas as pd
 from dagster import asset
 from typing import Generator, Any
 from dagster import OpExecutionContext, Output
-from dagster_cloud.metrics import put_context_metrics, DagsterInsightsMetric
+from dagster_cloud.metrics import put_context_metrics, DagsterMetric
 
 from purina_usage.utils import random_data
 
@@ -14,7 +14,7 @@ def users(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, A
     put_context_metrics(
         context,
         metrics=[
-            DagsterInsightsMetric(
+            DagsterMetric(
                 metric_name="snowflake_credits",
                 metric_value=122.22,
             )
@@ -33,7 +33,7 @@ def users(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, A
     put_context_metrics(
         context,
         metrics=[
-            DagsterInsightsMetric(
+            DagsterMetric(
                 metric_name="rows_affected",
                 metric_value=len(data),
             )
@@ -44,16 +44,6 @@ def users(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, A
 @asset(compute_kind="random")
 def orders(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, Any]:
     """A table containing all orders that have been placed."""
-
-    put_context_metrics(
-        context,
-        metrics=[
-            DagsterInsightsMetric(
-                metric_name="snowflake_credits",
-                metric_value=12.22,
-            )
-        ],
-    )
     data = random_data(
         extra_columns={"order_id": str, "quantity": int, "purchase_price": float, "sku": str},
         n=10000,
@@ -62,7 +52,7 @@ def orders(context: OpExecutionContext) -> Generator[Output[pd.DataFrame], Any, 
     put_context_metrics(
         context,
         metrics=[
-            DagsterInsightsMetric(
+            DagsterMetric(
                 metric_name="rows_affected",
                 metric_value=len(data),
             )

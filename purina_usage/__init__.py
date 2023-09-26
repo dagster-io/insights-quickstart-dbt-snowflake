@@ -40,22 +40,13 @@ raw_data_assets = load_assets_from_package_module(
 
 usage_assets = load_assets_from_package_module(
     usage,
-    group_name="snowflake_insights",
+    group_name="snowflake_async_metrics",
     # all of these assets live in the snowflake database, under the schema usage_data
-    key_prefix=["snowflake", "insights_data"],
+    key_prefix=["snowflake", "metrics_data"],
 )
 
 # define jobs as selections over the larger graph
 raw_job = define_asset_job("raw_job", selection=["raw_data/users", "raw_data/orders"])
-
-from gql.transport.requests import RequestsHTTPTransport
-
-transport = RequestsHTTPTransport(
-    url="http://localhost:3000/test/staging/graphql",
-    use_json=True,
-    timeout=300,
-    headers={"Dagster-Cloud-Api-Token": "user:test:joe"},
-)
 
 
 resources = {

@@ -2,6 +2,14 @@
 
 This project contains testing Dagster pipelines for cost and usage data attribution
 
+## usage
+
+you can refer to the [`snowflake_async_metrics` asset definition](./purina_usage/assets/usage/__init__.py) for an example of an async metric pipeline that will:
+
+1. fetch any asset observations made in the last hour with `query_id` metadata
+2. query the snowflake query_history table for the query_ids in step 1
+3. write asset metrics pulled from query_history table metric values
+
 ## snowflake role
 
 in order to fetch snowflake specific metric data you will need to create a service role that can access your snowflake account's query history table:
