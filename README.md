@@ -10,6 +10,15 @@ you can refer to the [`snowflake_async_metrics` asset definition](./purina_usage
 2. query the snowflake query_history table for the query_ids in step 1
 3. write asset metrics pulled from query_history table metric values
 
+## config
+
+the usage asset requires the following environment variables to function:
+
+- `SNOWFLAKE_USER`
+- `SNOWFLAKE_PASSWORD`
+- `SNOWFLAKE_ACCOUNT`
+- `SNOWFLAKE_WAREHOUSE`
+
 ## snowflake role
 
 in order to fetch snowflake specific metric data you will need to create a service role that can access your snowflake account's query history table:
