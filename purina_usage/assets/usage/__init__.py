@@ -7,7 +7,7 @@ from gql.transport.requests import RequestsHTTPTransport
 
 import snowflake.connector
 from dagster import HourlyPartitionsDefinition, Output, asset
-from dagster_insights import DagsterMetric, put_asset_metrics
+from dagster_cloud.metrics import DagsterMetric, put_metrics
 from dagster_cloud import DagsterCloudAgentInstance
 
 ASSET_OBSERVATIONS_QUERY = """
@@ -114,6 +114,8 @@ def snowflake_async_metrics(context):
                     }
 
     context.log.info(f"Found {len(query_id_mappings)} asset observations with query id metadata")
+    if len(query_id_mappings) == 0:
+        return Output("noop")
     # Establish a connection to the Snowflake DB
     con = snowflake.connector.connect(
         user=os.getenv("SNOWFLAKE_USER"),
@@ -153,10 +155,7 @@ AND END_TIME < CAST(TO_TIMESTAMP('{end_date_timestamp}') AS DATETIME)
 
     metrics_written = 0
 
-    if context.instance.organization_name != "test":
-        url = f"{context.instance.dagit_url}graphql"
-    else:
-        url = "http://127.0.0.1:3000/test/staging/graphql"
+    url = os.getenv("DAGSTER_METRICS_DAGIT_URL", f"{context.instance.dagit_url}graphql")
     token = context.instance.dagster_cloud_agent_token
     if not isinstance(context.instance, DagsterCloudAgentInstance):
         context.info.error("metrics is only available when running in Dagster Cloud")
@@ -167,7 +166,7 @@ AND END_TIME < CAST(TO_TIMESTAMP('{end_date_timestamp}') AS DATETIME)
             metrics_written += 1
             observation = query_id_mappings[row[0]]
 
-            put_asset_metrics(
+            put_metrics(
                 url=url,
                 token=token,
                 run_id=observation["runId"],

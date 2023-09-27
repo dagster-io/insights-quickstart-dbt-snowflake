@@ -4,7 +4,7 @@ from pathlib import Path
 from dagster_dbt import DbtCliResource, dbt_assets
 
 from dagster import OpExecutionContext
-from dagster_insights import store_dbt_adapter_metrics
+from dagster_cloud.metrics import store_dbt_adapter_metrics
 
 dbt_project_dir = Path(__file__).joinpath("..", "..", "..", "..", "dbt_project").resolve()
 dbt_cli_resource = DbtCliResource(

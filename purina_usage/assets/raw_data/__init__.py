@@ -3,7 +3,7 @@ import pandas as pd
 from dagster import asset
 from typing import Generator, Any
 from dagster import OpExecutionContext, Output
-from dagster_insights import put_context_metrics, DagsterMetric
+from dagster_cloud.metrics import put_context_metrics, DagsterMetric
 
 from purina_usage.utils import random_data
 
